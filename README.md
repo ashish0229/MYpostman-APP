@@ -77,7 +77,6 @@ The project is organized into two main directories: frontend and backend.
 ```bash
 git clone <your-repository-url>
 cd MYpostmate
-```bash
 exit
 
 2. **Create the Environment File**
@@ -104,7 +103,6 @@ docker-compose up --build
 	Frontend → http://localhost:5173
 
 	PostgreSQL Database → localhost:5432
-```bash
 exit
 
 ## ⚙️ Setup & Installation (Manual)
@@ -132,14 +130,12 @@ Run schema:
 
 ```bash
 psql -U AdminAsh2911 -d community_db -f database.sql
-```bash
 exit
 
 Start backend:
 
 ```bash
 npm run dev
-```bash
 exit
 
 3. **Frontend Setup**
@@ -147,7 +143,6 @@ exit
 	cd frontend
 	npm install
 	npm run dev
-	```bash
 	exit
 
 ---
@@ -172,6 +167,9 @@ This project is licensed under the MIT License.
 See the LICENSE
  file for more details.
 
+---
+
+Token verification: For each User/Mod/Admin a  login session were used to timed out and secure for longer session on app. This is expected to happen over time. User is resquest to create another account if Token verification fails.
 
 ---
 
