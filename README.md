@@ -167,6 +167,9 @@ This project is licensed under the MIT License.
 See the LICENSE
  file for more details.
 
+---
+
+Token verification: For each User/Mod/Admin a  login session were used to timed out and secure for longer session on app. This is expected to happen over time. User is resquest to create another account if Token verification fails.
 
 ---
 
