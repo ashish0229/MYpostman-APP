@@ -77,6 +77,8 @@ The project is organized into two main directories: frontend and backend.
 ```bash
 git clone <your-repository-url>
 cd MYpostmate
+```bash
+exit
 
 2. **Create the Environment File**
 In the project root, create a .env file.
@@ -102,6 +104,8 @@ docker-compose up --build
 	Frontend → http://localhost:5173
 
 	PostgreSQL Database → localhost:5432
+```bash
+exit
 
 ## ⚙️ Setup & Installation (Manual)
 
@@ -128,17 +132,23 @@ Run schema:
 
 ```bash
 psql -U AdminAsh2911 -d community_db -f database.sql
+```bash
+exit
 
 Start backend:
 
 ```bash
 npm run dev
+```bash
+exit
 
 3. **Frontend Setup**
 	```bash
 	cd frontend
 	npm install
 	npm run dev
+	```bash
+	exit
 
 ---
 
