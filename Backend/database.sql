@@ -9,6 +9,7 @@ DROP TYPE IF EXISTS post_status;
 
 -- Create ENUM types for defined roles and statuses
 CREATE TYPE user_role AS ENUM ('user', 'moderator', 'admin');
+-- UPDATED: Added 'quarantined' to the list of possible post statuses
 CREATE TYPE post_status AS ENUM ('pending', 'approved', 'rejected', 'quarantined', 'published');
 
 -- Create the 'users' table with the new 'display_name' column
@@ -45,9 +46,8 @@ CREATE TABLE moderation_logs (
 -- Create an index for faster lookups on post_id
 CREATE INDEX idx_moderation_logs_post_id ON moderation_logs(post_id);
 
--- Optional: Insert a default admin user for initial setup if needed
--- For development only. Replace with your desired credentials.
+-- --- FIX: Insert a default admin user with a REAL hashed password for "password" ---
 INSERT INTO users (username, display_name, password, role) 
-VALUES ('admin', 'Admin User', '$2a$10$f.c0s.a.AbCdEfGhIjKlM.NOpQrStUvWxYzAbCdEfGhIjKlM.NOpQ', 'admin')
+VALUES ('admin', 'Admin User', '$2a$10$E9p.IZ3..4A4XbCoaHz65.6.89.s25x0MQzJ9.5aM9b9aZO5.9zse', 'admin')
 ON CONFLICT (username) DO NOTHING;
 
