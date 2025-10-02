@@ -3,7 +3,8 @@
 [![Frontend](https://img.shields.io/badge/Frontend-React-blue)](https://reactjs.org/)  
 [![Backend](https://img.shields.io/badge/Backend-Node.js-green)](https://nodejs.org/)  
 [![Database](https://img.shields.io/badge/Database-PostgreSQL-blue)](https://www.postgresql.org/)  
-[![AI](https://img.shields.io/badge/AI-Google%20Gemini-red)](https://deepmind.google/)  
+[![AI](https://img.shields.io/badge/AI-Google%20Gemini-red)](https://deepmind.google/) 
+[![Unsplash Video Gen](https://img.shields.io/badge/Unsplash-Video%20Gen-blue?logo=unsplash&logoColor=white)](https://unsplash.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)  
 
 **MYpostmate** is a **full-stack, real-time, AI-powered community management and content generation platform**.  
