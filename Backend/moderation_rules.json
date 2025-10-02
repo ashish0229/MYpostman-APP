@@ -1,0 +1,79 @@
+{
+  "version": "1.0.0",
+  "description": "Configuration for the AI content moderation agent. Defines violation categories and sentiment analysis rules.",
+  "defaultAction": {
+    "unclassifiedViolation": "quarantine",
+    "negativeSentimentThreshold": 0.7,
+    "negativeSentimentAction": "quarantine"
+  },
+  "violationCategories": [
+    {
+      "name": "Hate Speech",
+      "description": "Content that promotes violence, incites hatred, promotes discrimination, or disparages on the basis of race or ethnic origin, religion, disability, age, nationality, veteran status, sexual orientation, sex, gender, gender identity, caste, immigration status or any other characteristic that is associated with systemic discrimination or marginalization.",
+      "keywords": [
+        "kill",
+        "die",
+        "murder",
+        "hate",
+        "racist",
+        "supremacy"
+      ],
+      "sensitivity": 0.9,
+      "action": "reject"
+    },
+    {
+      "name": "Spam & Scams",
+      "description": "Content that is duplicative, unsolicited, or includes fraudulent schemes, such as 'get rich quick' schemes, phishing, or promoting non-existent products.",
+      "keywords": [
+        "free money",
+        "guaranteed winner",
+        "click this link",
+        "crypto pump",
+        "investment opportunity"
+      ],
+      "sensitivity": 0.8,
+      "action": "reject"
+    },
+    {
+      "name": "Harassment & Bullying",
+      "description": "Content that targets individuals with abuse or malicious attacks. This includes revealing someone's private information, threats, or encouraging others to engage in abusive behavior.",
+      "keywords": [
+        "dox",
+        "i know where you live",
+        "ugly",
+        "stupid",
+        "worthless"
+      ],
+      "sensitivity": 0.85,
+      "action": "quarantine"
+    },
+    {
+      "name": "Self-Harm",
+      "description": "Content that encourages or provides instructions on how to self-harm or commit suicide. This does not include content that is supportive or discusses recovery.",
+      "keywords": [
+        "suicide",
+        "kill myself",
+        "cutting",
+        "pro-ana"
+      ],
+      "sensitivity": 1.0,
+      "action": "reject"
+    },
+    {
+        "name": "Explicit Content",
+        "description": "Content that is sexually explicit or gratuitously violent. This includes pornography and realistic depictions of gore.",
+        "keywords": [
+            "blood",
+            "gore",
+            "decapitation",
+            "explicit"
+        ],
+        "sensitivity": 0.95,
+        "action": "reject"
+    }
+  ],
+  "sentimentAnalysis": {
+    "positiveKeywords": ["love", "amazing", "great", "wonderful", "excited", "happy"],
+    "negativeKeywords": ["hate", "terrible", "awful", "sad", "angry", "disappointed"]
+  }
+}

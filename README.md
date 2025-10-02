@@ -1,109 +1,169 @@
-# MYpostmate - Community Content Management Platform
+# MYpostmate – AI-Powered Community Content Management Platform  
 
-[![Frontend](https://img.shields.io/badge/Frontend-React-blue)](https://reactjs.org/)
-[![Backend](https://img.shields.io/badge/Backend-Node.js-green)](https://nodejs.org/)
-[![Database](https://img.shields.io/badge/Database-PostgreSQL-blue)](https://www.postgresql.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![Frontend](https://img.shields.io/badge/Frontend-React-blue)](https://reactjs.org/)  
+[![Backend](https://img.shields.io/badge/Backend-Node.js-green)](https://nodejs.org/)  
+[![Database](https://img.shields.io/badge/Database-PostgreSQL-blue)](https://www.postgresql.org/)  
+[![AI](https://img.shields.io/badge/AI-Google%20Gemini-red)](https://deepmind.google/)  
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)  
 
-**MYpostmate** is a full-stack web application for comprehensive community content management. It leverages **AI-powered content generation**, automated moderation, and a **real-time dashboard** for monitoring. The system uses **role-based authentication** to manage access for administrators, moderators, and users.
-
----
-
-## 🛠 Core Technologies
-
-- **Frontend:** React with Vite  
-- **Backend:** Node.js with Express  
-- **Database:** PostgreSQL  
-- **Real-Time Communication:** Socket.IO for WebSockets  
-- **AI Integration:** Google Gemini & Unsplash for content analysis and text/image generation  
+**MYpostmate** is a **full-stack, real-time, AI-powered community management and content generation platform**.  
+It leverages **AI for content creation**, includes a **rule-based moderation system**, and provides **real-time dashboards**. The entire system is **fully containerized with Docker**, allowing a one-command setup and deployment.  
 
 ---
 
-## ✨ Features
+## 📌 Table of Contents  
 
-- **AI-Powered Content Generation:** Generate social media posts based on topic, tone, and platform.  
-- **Automated Content Moderation:** AI analyzes every post based on community rules.  
-- **User Authentication:** Secure registration and login with JWT session management.  
-- **Role-Based Access Control (RBAC):** Separate roles for Admin, Moderator, and User.  
-- **Live Dashboard:** Real-time stats on posts, new users, and policy violations.  
-- **Live Moderation Log:** Tracks approved, quarantined, and published actions in real-time.  
-- **User Management:** Admins can view and manage all registered users.  
+- [Core Features](#-core-features)  
+- [Tech Stack](#-tech-stack)  
+- [Project Structure](#-project-structure)  
+- [Setup & Installation (Docker)](#-setup--installation-docker)  
+- [Setup & Installation (Manual)](#-setup--installation-manual)  
+- [Usage](#-usage)  
+- [License](#-license)  
 
 ---
 
-## 🗂 Project Structure
+## ✨ Core Features  
 
+- **AI Content Generation**: Generate social media posts with topic, tone, and platform using **Google Gemini API**.  
+- **Rule-Based AI Moderation**: AI moderation engine validates all content against rules defined in `moderation_rules.json`.  
+- **Full User Authentication**: Secure registration/login with **role-based access control (Admin, Moderator, User)**.  
+- **JWT Session Management**: Secure user sessions with JWT (1-hour expiry).  
+- **Real-Time Dashboards & Logs**: Live updates for posts, user management, and moderation logs using **Socket.IO**.  
+- **Manual Moderation Tools**: Admins/Moderators can override AI decisions (approve/reject).  
+- **Persistent PostgreSQL Database**: Stores all users, posts, and moderation history.  
+- **Fully Containerized**: Defined in `docker-compose.yml` for simple deployment.  
+
+---
+
+## 🛠 Tech Stack  
+
+| **Category**   | **Technology** |
+|----------------|----------------|
+| **Frontend**   | React, Vite, Tailwind CSS, Socket.IO Client |
+| **Backend**    | Node.js, Express.js, Socket.IO |
+| **Database**   | PostgreSQL |
+| **Security**   | JWT, bcrypt.js |
+| **AI / APIs**  | Google Gemini, Unsplash |
+| **DevOps**     | Docker, Docker Compose |
+
+---
+
+## 🗂 Project Structure  
+
+MYpostmate/
+├── frontend/ # React client (Vite + Tailwind + Socket.IO client)
+├── backend/ # Node.js/Express API + Socket.IO server
+├── moderation_rules.json # Rule-based AI moderation rules
+├── docker-compose.yml # Container orchestration
+└── .env.example # Example environment configuration
 
 Project Structure
 The project is organized into two main directories: frontend and backend.
 
-#System Prerequisites
-Before you begin, ensure you have the following installed on your system:
-Node.js (v18 or later recommended)
-PostgreSQL
-Backend Setup
 
-#Navigate to the Backend Directory:
-cd backend
-##Install Dependencies:
-npm install
+---
 
-#Set Up the Database:
+## ⚙️ Setup & Installation (Docker)  
 
-Open your PostgreSQL terminal (psql) or a GUI client.
+✅ **Recommended Method** for easiest setup.  
 
-Create a new database for the project.
+### Prerequisites  
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop)  
 
-CREATE DATABASE community_db;
+### Instructions  
 
-Create a user and grant it privileges (replace 'your_password' with a secure password).
+1. **Clone the Repository**  
+```bash
+git clone <your-repository-url>
+cd MYpostmate
 
-CREATE USER AdminAsh2911 WITH PASSWORD 'your_password';
-GRANT ALL PRIVILEGES ON DATABASE community_db TO AdminAsh2911;
-GRANT ALL ON SCHEMA public TO AdminAsh2911;
-
-#Configure Environment Variables:
-
-Create a new file named .env in the backend directory.
-
-Copy the content from .env.example and fill in your specific credentials. It should look like this:
-
-# API Keys
-GOOGLE_API_KEY=AIzaYourGoogleApiKey...
-UNSPLASH_API_KEY=YourUnsplashApiKey...
-
-# PostgreSQL Database Connection
-DB_USER="AdminAsh2911"
-DB_HOST="localhost"
-DB_DATABASE="community_db"
-DB_PASSWORD="your_password"
+2. **Create the Environment File**
+In the project root, create a .env file.
+Copy contents from .env.example and replace placeholders with actual values:
+```.env
+GOOGLE_API_KEY=YourGoogleGeminiAPIKey
+UNSPLASH_API_KEY=YourUnsplashApiKey
+DB_USER=your_db_username
+DB_PASSWORD=your_password
+DB_HOST=db_host_name
 DB_PORT=5432
+DB_DATABASE=db_name
+JWT_SECRET=generate_a_long_random_secret_string
 
-# Application Port
-PORT=3001
+2. **Build & Run the Application**
+```bash
+docker-compose up --build
+	
+	The stack will start:
 
-# Security - JWT Secret
-JWT_SECRET="generate_a_long_random_secret_string"
+	Backend API → http://localhost:3001
 
-##Run the Database Schema:
-From the backend directory, run the following command to create all necessary tables. You will be prompted for your user's password.
+	Frontend → http://localhost:5173
+
+	PostgreSQL Database → localhost:5432
+
+## ⚙️ Setup & Installation (Manual)
+
+If you prefer not to use Docker:
+
+1. **Install Requirements**
+
+	Node.js v18+
+
+	PostgreSQL
+
+2. **Backend Setup**
+	```bash
+	cd backend
+	npm install
+
+Create the database:
+
+CREATE DATABASE db_name;
+CREATE USER your_db_username WITH PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE db_name TO your_db_username;
+
+Run schema:
+
+```bash
 psql -U AdminAsh2911 -d community_db -f database.sql
 
-##Start the Backend Server:
+Start backend:
+
+```bash
 npm run dev
-The server should now be running on http://localhost:3001.
 
-Frontend Setup
-Open a New Terminal.
+3. **Frontend Setup**
+	```bash
+	cd frontend
+	npm install
+	npm run dev
 
-#Navigate to the Frontend Directory:
-cd frontend
-Install Dependencies:
-npm install
+---
 
-##Start the Frontend Server:
-npm run dev
-The application will now be running on http://localhost:5173.
+##📝 Usage
+
+Visit http://localhost:5173 in your browser.
+
+	1. *Register a new account (choose Admin role for full access).*
+
+	2. *Use the sidebar navigation:
+
+	3. *Generator → Create AI posts
+
+	4. *Dashboard → Monitor community activity
+
+	5. *Moderation Log → Track approvals/rejections in real-time
+
+##📄 License
+
+This project is licensed under the MIT License.
+See the LICENSE
+ file for more details.
+
+
+---
 
 #How to Use
 Open your browser and navigate to http://localhost:5173.
