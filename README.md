@@ -130,7 +130,7 @@ GRANT ALL PRIVILEGES ON DATABASE db_name TO your_db_username;
 Run schema:
 
 ```bash
-psql -U AdminAsh2911 -d community_db -f database.sql
+psql -U username -d name_db -f database.sql
 exit
 
 Start backend:
