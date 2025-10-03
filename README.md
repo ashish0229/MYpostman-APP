@@ -74,16 +74,18 @@ The project is organized into two main directories: frontend and backend.
 
 ### Instructions  
 
-1. **Clone the Repository**  
-```bash
+⚙️ Setup & Installation (Docker)
+
+1. Clone the Repository
+
 git clone <your-repository-url>
 cd MYpostmate
-exit
 
-2. **Create the Environment File**
+2. Create the Environment File
+
 In the project root, create a .env file.
 Copy contents from .env.example and replace placeholders with actual values:
-```.env
+
 GOOGLE_API_KEY=YourGoogleGeminiAPIKey
 UNSPLASH_API_KEY=YourUnsplashApiKey
 DB_USER=your_db_username
@@ -93,33 +95,37 @@ DB_PORT=5432
 DB_DATABASE=db_name
 JWT_SECRET=generate_a_long_random_secret_string
 
-2. **Build & Run the Application**
-```bash
+3. Build & Run the Application
+
 docker-compose up --build
-	
-	The stack will start:
 
-	Backend API → http://localhost:3001
+The stack will start:
 
-	Frontend → http://localhost:5173
+Backend API → http://localhost:3001
 
-	PostgreSQL Database → localhost:5432
-exit
+Frontend → http://localhost:5173
 
-## ⚙️ Setup & Installation (Manual)
+PostgreSQL Database → localhost:5432
+
+
+
+---
+
+⚙️ Setup & Installation (Manual)
 
 If you prefer not to use Docker:
 
-1. **Install Requirements**
+1. Install Requirements
 
-	Node.js v18+
+Node.js v18+
 
-	PostgreSQL
+PostgreSQL
 
-2. **Backend Setup**
-	```bash
-	cd backend
-	npm install
+
+2. Backend Setup
+
+cd backend
+npm install
 
 Create the database:
 
@@ -129,55 +135,73 @@ GRANT ALL PRIVILEGES ON DATABASE db_name TO your_db_username;
 
 Run schema:
 
-```bash
-psql -U username -d name_db -f database.sql
-exit
+psql -U your_db_username -d db_name -f database.sql
 
 Start backend:
 
-```bash
 npm run dev
-exit
 
-3. **Frontend Setup**
-	```bash
-	cd frontend
-	npm install
-	npm run dev
-	exit
+3. Frontend Setup
+
+cd frontend
+npm install
+npm run dev
+
 
 ---
 
-##📝 Usage
+📝 Usage
 
 Visit http://localhost:5173 in your browser.
 
-	1. *Register a new account (choose Admin role for full access).*
+1. Register a new account (choose Admin role for full access).
 
-	2. *Use the sidebar navigation:
 
-	3. *Generator → Create AI posts
+2. Use the sidebar navigation:
 
-	4. *Dashboard → Monitor community activity
+Generator → Create AI posts
 
-	5. *Moderation Log → Track approvals/rejections in real-time
+Dashboard → Monitor community activity
 
-##📄 License
+Moderation Log → Track approvals/rejections in real time
+
+
+
+
+
+---
+
+🔑 Token Verification
+
+Each User/Mod/Admin session is secured with token-based authentication.
+
+Tokens expire automatically over time for security.
+
+If token verification fails, the user may need to log in again.
+
+In rare cases, creating a new account may be necessary.
+
+
+
+---
+
+📄 License
 
 This project is licensed under the MIT License.
-See the LICENSE
- file for more details.
+See the LICENSE file for more details.
+
 
 ---
 
-Token verification: For each User/Mod/Admin a  login session were used to timed out and secure for longer session on app. This is expected to happen over time. User is resquest to create another account if Token verification fails.
+📅 Last Updated
+
+October 4, 2025
 
 ---
 
-#How to Use
-Open your browser and navigate to http://localhost:5173.
-You will be prompted to create an account. Register a new user with the "Admin" role to have access to all features.
-After logging in, you can navigate between the different sections using the sidebar.
-Go to the "Generator" to create new posts and watch the "Dashboard" and "Moderation Log" update in real-time.
+👨‍💻 Author
 
-This README was last updated on October 1, 2025.
+Developed by Ashish Rajput
+
+
+
