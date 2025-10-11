@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { io } from "socket.io-client";
-// --- SVG Icons ---
 import Sidebar from "./components/shared/sidebar";
 // --- Views ---
 import {
