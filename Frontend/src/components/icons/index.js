@@ -1,0 +1,11 @@
+export { default as AnalyticsIcon } from "./analytics-icon";
+export { default as BotIcon } from "./bot-icon";
+export { default as CalendarIcon } from "./calendar-icon";
+export { default as FileStackIcon } from "./file-stack-icon";
+export { default as HistoryIcon } from "./history-icon";
+export { default as ImageIcon } from "./image-icon";
+export { default as LayoutDashboardIcon } from "./layout-dashboard-icon";
+export { default as LogOutIcon } from "./log-out-icon";
+export { default as SettingsIcon } from "./settings-icon";
+export { default as UserIcon } from "./user-icon";
+export { default as UsersIcon } from "./users-icon";
