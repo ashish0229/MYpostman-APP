@@ -1,0 +1,114 @@
+{
+  "version": "1.0",
+  "description": "A model for an AI support assistant that uses NLP to understand user intent and entities for providing targeted help.",
+  "intents": [
+    {
+      "name": "LoginIssue",
+      "description": "User is having trouble logging into their account.",
+      "trainingPhrases": [
+        "I can't log in",
+        "My password isn't working",
+        "I forgot my password",
+        "The login page is giving me an error",
+        "Unable to access my account",
+        "Sign in failed"
+      ],
+      "requiredEntities": ["username"],
+      "responseStrategy": {
+        "type": "WORKFLOW",
+        "prompt": "The user is reporting a login issue for the username [username]. First, check if the account exists. If it does, guide them through the password reset process. If the account does not exist, inform them gently and ask if they would like to register.",
+        "knowledgeBaseKeywords": ["password reset", "account recovery", "login error"]
+      }
+    },
+    {
+      "name": "BillingInquiry",
+      "description": "User has a question about their bill, subscription, or a specific charge.",
+      "trainingPhrases": [
+        "I have a question about my bill",
+        "Why was I charged this amount?",
+        "Can you explain this invoice?",
+        "I want to upgrade my subscription",
+        "How do I cancel my plan?",
+        "Tell me about my current billing cycle"
+      ],
+      "requiredEntities": ["invoiceNumber", "subscriptionTier"],
+      "responseStrategy": {
+        "type": "KNOWLEDGE_BASE",
+        "prompt": "The user has a billing question. Use the knowledge base to answer questions about their subscription, a specific invoice number [invoiceNumber], or how to manage their plan. Be helpful and provide clear, step-by-step instructions if needed.",
+        "knowledgeBaseKeywords": ["billing", "subscription", "invoice", "cancellation", "upgrade"]
+      }
+    },
+    {
+      "name": "FeatureRequest",
+      "description": "User is suggesting a new feature or improvement for the application.",
+      "trainingPhrases": [
+        "It would be great if you could add...",
+        "I have an idea for a new feature",
+        "You should implement...",
+        "Can you make it do this?",
+        "I wish the app had this capability"
+      ],
+      "requiredEntities": [],
+      "responseStrategy": {
+        "type": "GENERATIVE",
+        "prompt": "The user is suggesting a new feature. Thank them enthusiastically for their feedback. Acknowledge their idea and let them know you will pass it along to the development team for consideration. Keep the tone positive and encouraging.",
+        "knowledgeBaseKeywords": []
+      }
+    },
+    {
+      "name": "BugReport",
+      "description": "User is reporting a technical problem or unexpected behavior in the application.",
+      "trainingPhrases": [
+        "Something is broken",
+        "I'm getting an error message",
+        "The button isn't working",
+        "The page won't load correctly",
+        "Your app crashed"
+      ],
+      "requiredEntities": ["featureArea", "errorMessage"],
+      "responseStrategy": {
+        "type": "WORKFLOW",
+        "prompt": "The user is reporting a bug in the [featureArea] area of the app, with the error message: [errorMessage]. Apologize for the inconvenience. Create a new support ticket with these details and inform the user that the technical team will investigate the issue. Provide them with a ticket reference number.",
+        "knowledgeBaseKeywords": ["bug report", "technical support", "error message"]
+      }
+    },
+    {
+      "name": "GeneralQuestion",
+      "description": "User is asking a general knowledge question not related to a specific support issue.",
+      "trainingPhrases": [
+        "What is an API?",
+        "How does HTTP work?",
+        "Tell me a fun fact about web development",
+        "Who are you?"
+      ],
+      "requiredEntities": [],
+      "responseStrategy": {
+        "type": "GENERATIVE",
+        "prompt": "The user is asking a general knowledge question. Provide a concise, helpful, and accurate answer. Maintain the persona of a friendly AI assistant for a tool called MYpostman.",
+        "knowledgeBaseKeywords": []
+      }
+    }
+  ],
+  "entities": [
+    {
+      "name": "username",
+      "description": "The user's login name."
+    },
+    {
+      "name": "invoiceNumber",
+      "description": "A unique identifier for a billing statement."
+    },
+    {
+      "name": "subscriptionTier",
+      "description": "The user's current plan (e.g., Free, Pro, Enterprise)."
+    },
+    {
+      "name": "featureArea",
+      "description": "The specific part of the application where a bug occurred (e.g., 'the generator', 'the dashboard')."
+    },
+    {
+      "name": "errorMessage",
+      "description": "The specific error text the user is seeing on their screen."
+    }
+  ]
+}
