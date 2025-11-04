@@ -1,0 +1,13 @@
+Flask
+scikit-learn
+python-dotenv
+requests
+numpy
+tensorflow
+matplotlib
+
+google-generativeai
+
+
+scikit-learn
+numpy
