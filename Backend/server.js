@@ -1,6 +1,6 @@
 // --- backend/server.js ---
 console.log("--- Loading backend/server.js ---");
-require('dotenv').config();
+require('dotenv').config({ path: './.env' });
 
 const http = require('http');
 const express = require('express');
@@ -13,7 +13,7 @@ console.log("--- server.js: Importing routes... ---");
 const authRoutes = require('./routes/auth');
 const postRoutes = require('./routes/posts');
 const moderationLogRoutes = require('./routes/moderationLogs');
-// const userRoutes = require('./routes/users'); // Temporarily disabled for debugging
+//const userRoutes = require('./routes/users'); // Temporarily disabled for debugging
 const dashboardRoutes = require('./routes/dashboard');
 console.log("--- server.js: All routes imported successfully. ---");
 

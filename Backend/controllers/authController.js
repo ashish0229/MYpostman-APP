@@ -74,7 +74,7 @@ const login = async (req, res, next) => {
     if (!username || !password) {
         return res.status(400).json({ error: 'Please provide username and password.' });
     }
-
+// matching with existing user
     const client = await pool.connect();
     try {
         const result = await client.query('SELECT * FROM users WHERE username = $1', [username]);
