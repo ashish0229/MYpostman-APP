@@ -66,6 +66,7 @@ export default function App() {
                 apiClient.request('/moderation-logs'),
                 apiClient.request('/posts')
             ]);
+            // saves in the UI instantly with backend data.
             setLiveStats(stats);
             setLiveLogs(logs);
             setLivePosts(posts);
@@ -83,9 +84,9 @@ export default function App() {
         const token = localStorage.getItem('authToken');
         const user = localStorage.getItem('currentUser');
         if (token && user) {
-             const parsedUser = JSON.parse(user);
-             setAuthData({ token, user: parsedUser, isLoading: false });
-             fetchAllInitialData(parsedUser);
+            const parsedUser = JSON.parse(user);
+            setAuthData({ token, user: parsedUser, isLoading: false });
+            fetchAllInitialData(parsedUser);
         } else {
             setAuthData({ token: null, user: null, isLoading: false });
         }
