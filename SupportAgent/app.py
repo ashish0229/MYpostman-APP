@@ -4,6 +4,11 @@ from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
 import os
+import uvicorn
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List
 # --- NEW: Import the LSTM predictor instead of the old classifier ---
 from lstm_predictor import predict_intent
 
