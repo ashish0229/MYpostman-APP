@@ -2,11 +2,14 @@
 console.log("--- Loading backend/server.js ---");
 require('dotenv').config({ path: './.env' });
 
+
+
 const http = require('http');
 const express = require('express');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const pool = require('./db');
+const axios = require("axios");
 
 // --- Import API Routes ---
 console.log("--- server.js: Importing routes... ---");
@@ -21,6 +24,7 @@ console.log("--- server.js: All routes imported successfully. ---");
 const app = express();
 const server = http.createServer(app);
 
+
 // --- WebSocket (Socket.IO) Setup ---
 const io = new Server(server, {
     cors: {
@@ -28,6 +32,48 @@ const io = new Server(server, {
         methods: ["GET", "POST", "PUT"]
     }
 });
+
+
+io.on("connection", (socket) => {
+    console.log("🟢 New client connected:", socket.id);
+
+    socket.on("user_message", async (data) => {
+    console.log("📩 User message:", data);
+
+    try {
+        const userText = data.message || data.text || data.content;
+
+        if (!userText) {
+            console.log("⚠️ No message text received. Skipping.");
+            return;
+        }
+
+        const response = await axios.post("http://localhost:3002/api/chat", {
+            message: userText,
+        });
+
+        const botReply = response.data.reply;
+        console.log("🤖 Bot Reply:", botReply);
+
+        io.emit("support_reply", {
+            userId: data.userId,
+            message: botReply,
+        });
+
+    } catch (err) {
+        console.error("❌ Error contacting Python model:", err.message);
+    }
+    socket.on("support_reply", (data) => {
+        console.log("📨 Support Agent Reply:", data);
+        io.emit("support_reply", data);
+    });
+
+    socket.on("disconnect", () => {
+        console.log("🔴 Client disconnected:", socket.id);
+    });
+});
+});
+
 
 // --- Middleware ---
 app.use(cors()); 

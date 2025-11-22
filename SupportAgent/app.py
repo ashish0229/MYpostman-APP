@@ -61,26 +61,35 @@ def handle_chat():
         return jsonify({'error': "An error occurred while processing your request."}), 500
 
 def call_gemini(prompt):
-    """Helper function to call the Google Gemini API."""
     api_key = os.getenv('GOOGLE_API_KEY')
     if not api_key:
         return "Error: GOOGLE_API_KEY is not configured."
-        
-    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key={api_key}"
-    
-    headers = {'Content-Type': 'application/json'}
-    payload = {'contents': [{'parts': [{'text': prompt}]}]}
-    
+
+    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "contents": [
+            {
+                "parts": [{"text": prompt}]
+            }
+        ]
+    }
+
     try:
         response = requests.post(api_url, headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
-        return data['candidates'][0]['content']['parts'][0]['text']
+
+        return data["candidates"][0]["content"]["parts"][0]["text"]
+
     except Exception as e:
-        print(f"❌ Gemini API Error: {e}")
+        print("❌ Gemini API Error:", e)
         return "Sorry, I'm having trouble connecting to my AI brain right now."
 
 if __name__ == '__main__':
-    # Use the PORT from .env, defaulting to 3002
-    app.run(port=int(os.getenv("PORT", 3002)), debug=False)
+    app.run(port=3002, debug=False)
+# To run with Uvicorn for ASGI support
+# uvicorn.run(app, host='0.0.0.0', port=3002)               
+
 
