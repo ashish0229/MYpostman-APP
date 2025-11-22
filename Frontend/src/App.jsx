@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { io } from "socket.io-client";
+import SupportChat from "./components/support_agent.jsx";
+
 
 // --- SVG Icons ---
 const BotIcon = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}> <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /> <path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /> </svg> );
@@ -223,12 +225,28 @@ export default function App() {
     };
 
     return (
-        <div className="flex h-screen bg-gray-100 text-gray-900 font-sans">
-            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} user={authData.user} onLogout={handleLogout} />
-            <main className="flex-1 p-8 overflow-y-auto">{renderContent()}</main>
-        </div>
-    );
+  <div className="flex h-screen bg-gray-100 text-gray-900 font-sans">
+
+      <Sidebar 
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          user={authData.user}
+          onLogout={handleLogout}
+      />
+
+      <main className="flex-1 p-8 overflow-y-auto">
+          {renderContent()}
+      </main>
+
+      {/* Support Chat Widget */}
+      <SupportChat currentUser={authData.user} />
+  </div>
+);
 }
+
+
+
+
 
 // --- All other components ---
 const AuthView = ({ onLogin, onRegister, isLoading, error }) => {
