@@ -8,6 +8,6 @@ matplotlib
 
 google-generativeai
 
-
+transformers 
 scikit-learn
 numpy

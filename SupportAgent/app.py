@@ -4,13 +4,8 @@ from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
 import os
-import uvicorn
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List
-# --- NEW: Import the LSTM predictor instead of the old classifier ---
 from lstm_predictor import predict_intent
+
 
 load_dotenv()
 
@@ -25,7 +20,6 @@ try:
 except Exception as e:
     print(f"❌ FATAL: Could not load support_agent_model.json. {e}")
     support_model = {"intents": []}
-
 
 @app.route('/api/chat', methods=['POST'])
 def handle_chat():
@@ -52,7 +46,7 @@ def handle_chat():
         final_prompt = matched_intent['responseStrategy']['prompt'].replace('[user_message]', message)
         
         # Call the external LLM for the final text generation
-        llm_response = call_gemini(final_prompt)
+        llm_response = call_llama(final_prompt)
 
         return jsonify({'reply': llm_response})
 
@@ -60,36 +54,43 @@ def handle_chat():
         print(f"❌ Error in chat handler: {e}")
         return jsonify({'error': "An error occurred while processing your request."}), 500
 
-def call_gemini(prompt):
-    api_key = os.getenv('GOOGLE_API_KEY')
-    if not api_key:
-        return "Error: GOOGLE_API_KEY is not configured."
-
-    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
-
-    headers = {"Content-Type": "application/json"}
-    payload = {
-        "contents": [
-            {
-                "parts": [{"text": prompt}]
-            }
-        ]
-    }
-
+def call_llama(prompt):
+    """Call free Llama 3.1 model using Groq API."""
     try:
-        response = requests.post(api_url, headers=headers, json=payload)
-        response.raise_for_status()
-        data = response.json()
+        api_key = os.getenv("GROQ_API_KEY")
+        if not api_key:
+            return "Error: GROQ_API_KEY is not configured."
 
-        return data["candidates"][0]["content"]["parts"][0]["text"]
+        url = "https://api.groq.com/openai/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "model": "llama-3.3-70b-versatile",
+            "messages": [
+                {"role": "system", "content": "You are a helpful support agent for MYpostmate."},
+                {"role": "user", "content": prompt}
+            ],
+            "max_tokens": 200,
+            "temperature": 0.7
+        }
+
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+
+        data = response.json()
+        return data["choices"][0]["message"]["content"]
 
     except Exception as e:
-        print("❌ Gemini API Error:", e)
-        return "Sorry, I'm having trouble connecting to my AI brain right now."
+        print("❌ Groq API Error:", e)
+        return "Sorry, I'm having trouble connecting to the AI system right now."
+
 
 if __name__ == '__main__':
     app.run(port=3002, debug=False)
 # To run with Uvicorn for ASGI support
-# uvicorn.run(app, host='0.0.0.0', port=3002)               
+# uvicorn.run(app, host='0.0.0.0', port=3002)
 
 
