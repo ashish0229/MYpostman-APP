@@ -1,37 +1,36 @@
-name: MYpostmate CD Pipeline
+name: MYpostmate CI Pipeline
 
 on:
-  workflow_run:
-    workflows: ["MYpostmate CI Pipeline"]
-    types:     [completed]
-    branches:  [main]
+  push:
+    branches: ['main', 'develop']
+  pull_request:
+    branches: ['main']
 
 jobs:
-  deploy:
-    name: Deploy to Production
+  build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy via SSH using docker-compose pull + up
-        uses: appleboy/ssh-action@v1
-        with:
-          host:     ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key:      ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /app/mypostmate
+      - name: Create .env file
+        run: |
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "NODE_ENV=test" >> .env
+          echo "PORT=3001" >> .env
 
-            # Pull latest images from DockerHub
-            docker compose pull
+      - name: Build all Docker services
+        run: docker compose build
 
-            # Restart only backend and frontend — keep db running
-            docker compose up -d --no-deps backend frontend
+      - name: Print logs on failure
+        if: failure()
+        run: docker compose logs
 
-            # Remove unused images
-            docker image prune -f
-
-            echo "✅ Deployment complete at $(date)"
+      - name: Tear down services
+        if: always()
+        run: docker compose down -v
