@@ -1,0 +1,111 @@
+name: MYpostmate CI Pipeline
+
+on:
+  push:
+    branches: ['main', 'develop']
+  pull_request:
+    branches: ['main']
+
+jobs:
+
+  # ── JOB 1: Build and test using your docker-compose ──
+  build-and-test:
+    name: Build and Test via Docker Compose
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Create .env file from GitHub Secrets
+      - name: Create .env file
+        run: |
+          echo "DB_USER=${{ secrets.DB_USER }}"             >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"     >> .env
+          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}"     >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}"       >> .env
+          echo "NODE_ENV=test"                             >> .env
+          echo "PORT=3001"                                 >> .env
+
+      # Build all services using YOUR docker-compose.yml
+      - name: Build all Docker services
+        run: docker compose build
+
+      # Start db first and wait for health check
+      - name: Start database service
+        run: |
+          docker compose up -d db
+          echo "Waiting for PostgreSQL to be healthy..."
+          timeout 60 sh -c 'until docker compose ps db | grep -q "healthy"; do sleep 2; done'
+          echo "✅ Database is ready"
+
+      # Start backend — depends_on db (matches your compose)
+      - name: Start backend service
+        run: |
+          docker compose up -d backend
+          sleep 10
+          echo "✅ Backend started"
+
+      # Verify backend is responding
+      - name: Health check backend API
+        run: |
+          curl --fail http://localhost:3001/api/health || \
+          (echo "❌ Backend health check failed" && docker compose logs backend && exit 1)
+
+      # Start frontend
+      - name: Start frontend service
+        run: |
+          docker compose up -d frontend
+          sleep 5
+          echo "✅ Frontend started"
+
+      # Verify frontend is serving
+      - name: Health check frontend
+        run: |
+          curl --fail http://localhost:5173 || \
+          (echo "❌ Frontend health check failed" && docker compose logs frontend && exit 1)
+
+      # Print logs on failure for debugging
+      - name: Print all logs on failure
+        if: failure()
+        run: docker compose logs
+
+      # Clean up
+      - name: Tear down services
+        if: always()
+        run: docker compose down -v
+
+  # ── JOB 2: Push images to DockerHub ──────────────
+  push-images:
+    name: Push Docker Images to DockerHub
+    runs-on: ubuntu-latest
+    needs: build-and-test         # only runs if tests pass
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Backend
+          push:    true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/mypostmate-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/mypostmate-backend:${{ github.sha }}
+
+      - name: Build and push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Frontend
+          push:    true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/mypostmate-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/mypostmate-frontend:${{ github.sha }}

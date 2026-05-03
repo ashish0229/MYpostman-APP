@@ -94,6 +94,14 @@ app.use('/api/moderation-logs', moderationLogRoutes);
 // app.use('/api/users', userRoutes); // Temporarily disabled for debugging
 app.use('/api/dashboard', dashboardRoutes);
 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status:    'ok',
+    service:   'mypostmate-backend',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // --- Global Error Handler ---
 app.use((err, req, res, next) => {
     console.error("❌❌❌ GLOBAL ERROR HANDLER ❌❌❌", err.stack);
